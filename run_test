@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# runs the fluka test cases
+
+# check for the flupro environment
+if [ -z $FLUPRO ] ; then
+    echo "!! ERROR !!"
+    echo "FLUPRO enviroment not set"
+    exit
+fi
+
+# check for fludag
+if [ -z $FLUDAG ] ; then
+    echo "!! ERROR !!"
+    echo "FLUDAG environment not set"
+    exit
+fi
+
+# number of tests
+num_test=`wc -l test_input | awk '{print $1}'`
+echo "There are "$num_test" tests"
+
+# do n tests
+for (( i = 1 ; i <= $num_test ; i++ )) ; do
+
+    input=`sed -n "$i"p test_input | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'`
+
+    echo "Running test ..."$i
+
+    # run the test
+    ./basis.sh $input
+
+done
