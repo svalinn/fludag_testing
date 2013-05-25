@@ -4,3 +4,4 @@ test03 test/test03 1 slabs.inp 1 slabs.inp slabs.h5m /opt/fludag_testing/input/t
 test11 test/test11 1 spheres.inp 1 spheres.inp spheres.h5m /opt/fludag_testing/input/test11/ total 0.001
 test12 test/test12 1 spheres.inp 1 spheres.inp spheres.h5m /opt/fludag_testing/input/test12/ total 0.001
 test13 test/test13 1 spheres.inp 1 spheres.inp spheres.h5m /opt/fludag_testing/input/test13/ total 0.001
+test21 test/test21 1 prot.inp 1 prot.inp prot.h5m /opt/fludag_testing/input/test21/ total 0.001
