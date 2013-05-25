@@ -1,0 +1,24 @@
+TITLE
+
+* Set the defaults for precision simulations
+DEFAULTS                                                              PRECISIO
+* Define the beam characteristics
+BEAM            -1.0                           1.0       0.0      -1.0PROTON
+* Define the beam position
+BEAMPOS          0.0       0.0      0.01
+GEOBEGIN                                                              FLUGG
+GEOEND
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7..
+ASSIGNMA      VACUUM        1.
+ASSIGNMA       WATER        2.
+ASSIGNMA    BLCKHOLE        3.
+ASSIGNMA      VACUUM        4.
+USRBIN           10.    PROTON      -21.       0.5       0.5       0.3PROTFLUX
+USRBIN          -0.5      -0.5       0.0        1.        1.   10000.0 &
+USRTRACK         -1.    PROTON      -22.       2.        1.0    1000.0PFLUX
+USRTRACK         1.0    1.0E-6                                         &
+* Set the random number seed
+RANDOMIZ         1.0
+* Set the number of primary histories to be simulated in the run
+START        100000.                            1.
+STOP
