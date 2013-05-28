@@ -13,9 +13,9 @@ ASSIGNMA      VACUUM        1.
 ASSIGNMA       WATER        2.
 ASSIGNMA    BLCKHOLE        3.
 ASSIGNMA      VACUUM        4.
-USRBIN           10.    PROTON      -21.       0.5       0.5       0.3PROTFLUX
-USRBIN          -0.5      -0.5       0.0        1.        1.   10000.0 &
-USRTRACK         -1.    PROTON      -22.       2.        1.0    1000.0PFLUX
+*USRBIN           10.    PROTON      -21.       0.5       0.5       0.3PROTFLUX
+*USRBIN          -0.5      -0.5       0.0        1.        1.   10000.0 &
+USRTRACK         -1.    PROTON      -21.       2.        1.0    1000.0PFLUX
 USRTRACK         1.0    1.0E-6                                         &
 * Set the random number seed
 RANDOMIZ         1.0
