@@ -79,7 +79,7 @@ cd ..
 
 # run the fludag problem
 cd fludag
-$FLUPRO/flutil/rfluka -N0 -M$NumDag -e $FLUDAG/bin/mainfludag -d $NameDagh5m $NameDag > /dev/null
+$FLUPRO/flutil/rfluka -N0 -M$NumDag -e $FLUDAG/bld/mainfludag -d $NameDagh5m $NameDag > /dev/null
 # process the data
 `{
     for (( i = 1 ; i <= $NumFluka ; i++ )) do
