@@ -29,10 +29,10 @@ ASSIGNMA       WATER        C2
 ASSIGNMA    BLCKHOLE        C3
 ASSIGNMA    BLCKHOLE        C4
 ASSIGNMA    BLCKHOLE        C5
-USRTRACK         -1.    PROTON      -22.        C2       1.0    1000.0PFLUX
+USRTRACK         -1.    PROTON      -21.        C2       1.0    1000.0PFLUX
 USRTRACK         1.0    1.0E-6                                         &
-USRBIN           10.    PROTON      -21.       0.5       0.5       0.3PROTFLUX
-USRBIN          -0.5      -0.5       0.0        1.        1.   10000.0 &
+*USRBIN           10.    PROTON      -21.       0.5       0.5       0.3PROTFLUX
+*USRBIN          -0.5      -0.5       0.0        1.        1.   10000.0 &
 * Set the random number seed
 RANDOMIZ         1.0
 * Set the number of primary histories to be simulated in the run
