@@ -1,0 +1,31 @@
+RANDOMIZ
+TITLE
+test
+START          1.0E6                            1.
+DEFAULTS                                                              PRECISIO
+BEAM          -0.014             10000.0                              NEUTRON
+BEAMPOS          0.0       0.0       0.0
+GEOBEGIN                                                              COMBNAME
+    0    0          test
+SPH S1         0.0 0.0 0.0 15.0
+RPP S2         -20.0 20.0 -20.0 20.0 -20.0 20.0
+RPP S3         -25.0 25.0 -25.0 25.0 -25.0 25.0
+END
+C1           5 +S1
+C2           5 -S1 +S2
+C3           5 +S3 -S2
+C4           5 -S3
+END
+GEOEND
+MATERIAL                             1.0       26.                    HEAVYWAT
+MATERIAL          1.                 1.0       27.  HYDROGEN        2.DEUTERIU
+LOW-MAT     DEUTERIU
+COMPOUND   .66666667  DEUTERIU.333333334    OXYGEN                    HEAVYWAT
+ASSIGNMA    HEAVYWAT        C1
+ASSIGNMA      VACUUM        C2
+ASSIGNMA    BLCKHOLE        C3
+ASSIGNMA    BLCKHOLE        C4
+LOW-NEUT        260.                           0.0                -11.
+USRBDX          111.   NEUTRON      -21.        C1        C2       1.0FLUX1
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0       60. &
+STOP
