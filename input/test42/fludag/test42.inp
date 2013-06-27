@@ -1,0 +1,21 @@
+RANDOMIZ
+TITLE
+test
+START          1.0E6                            1.
+DEFAULTS                                                              PRECISIO
+BEAM          -0.014             10000.0                              NEUTRON
+BEAMPOS          0.0       0.0       0.0
+GEOBEGIN                                                              FLUGG
+GEOEND
+MATERIAL                             1.0       26.                    HEAVYWAT
+MATERIAL          1.                 1.0       27.  HYDROGEN        2.DEUTERIU
+LOW-MAT     DEUTERIU
+COMPOUND   .66666667  DEUTERIU.333333334    OXYGEN                    HEAVYWAT
+ASSIGNMA    HEAVYWAT         1
+ASSIGNMA      VACUUM         2
+ASSIGNMA    BLCKHOLE         3
+ASSIGNMA    BLCKHOLE         4
+LOW-NEUT        260.                           0.0                -11.
+USRBDX          111.   NEUTRON      -21.         1         2       1.0FLUX1
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0       60. &
+STOP
