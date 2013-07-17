@@ -140,6 +140,51 @@ if [ $Test == "total" ] ; then
   fi
   
 elif [ $Test == "spectrum" ] ; then
-    exit
+
+    if ! grep -q 'N. of energy intervals' fluka/$name_stub"_tab.lis"; then
+	echo "The fluka file does not contain energy intervals" 
+	exit
+    else
+	nbins=`grep 'N. of energy intervals' fluka/$name_stub"_tab.lis" | awk '{print $6}' | sed -n 1p`
+    fi
+
+    if ! grep -q 'N. of energy intervals' fludag/$name_stub"_tab.lis"; then
+	echo "The fludagfile does not contain energy intervals" 
+	exit
+    else
+	nbins_fludag=`grep 'N. of energy intervals' fluka/$name_stub"_tab.lis" | awk '{print $6}' | sed -n 1p`
+    fi
+
+    if [ $nbins -ne $nbins_fludag ] ; then
+	echo "The number of energy bins in the detectors do not match"
+	exit
+    fi
+
+    # if we are here then everything is ok
+    for (( i = 3 ; i <= `expr $nbins + 3` ; i++ )) ; do
+	fluka_val=`sed -n "$i"p fluka/$name_stub"_tab.lis" | awk '{print $3}'`
+	fludag_val=`sed -n "$i"p fludag/$name_stub"_tab.lis" | awk '{print $3}'`
+
+	diff=`{
+              echo "$fluka_val-$fludag_val"
+	      } | bc`
+        diffsq=`{
+                echo "sqrt($diff*$diff)"
+	        } | bc -l`
+
+	 if [[ $(echo "if (${diffsq} > ${Tol}) 1 else 0" | bc) -eq 1 ]]; then
+	     echo "Scores differ by more than tolerance"
+	     echo "Difference = " $diff
+	     echo "Magnitude = " $diffsq
+	     echo "!! Test FAILED !!"
+	     exit
+	 else
+	     # we're ok
+	     continue
+	 fi
+
+    done
+    # if here test passed
+
 fi
 
