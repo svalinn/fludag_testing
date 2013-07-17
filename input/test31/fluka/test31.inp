@@ -1,0 +1,42 @@
+TITLE
+
+* Set the defaults for precision simulations
+DEFAULTS                                                              PRECISIO
+* Define the beam characteristics
+BEAM            -1.0                           1.0       0.0      -1.0HEAVYION
+HI-PROPE        26.0      56.0
+IONTRANS    HEAVYION
+* Define the beam position
+BEAMPOS          0.0       0.0    0.0001
+GEOBEGIN                                                              COMBNAME
+    0    0          
+RPP P1         -50.0 50.0 -50.0 50.0 0.0 100.0
+XYP P2         0.5
+XYP P3         1.0
+XYP P4         2.0
+XYP P5         3.0
+END
+C1           5 +P1 +P2
+C2           5 +P1 -P2 +P3
+C3           5 +P1 -P3 +P4
+C4           5 +P1 -P4 +P5
+C5           5 +P1 -P5
+C6           5 -P1
+END
+GEOEND
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7..
+ASSIGNMA      VACUUM        C1
+ASSIGNMA    ALUMINUM        C2
+ASSIGNMA    POLYETHY        C3
+ASSIGNMA       WATER        C4
+ASSIGNMA      VACUUM        C5
+ASSIGNMA    BLCKHOLE        C6
+USRBIN           10.  HEAVYION      -21.       1.0       1.0       3.0HVYFLUX
+USRBIN          -1.0      -1.0       0.0        1.       1.0    30000.&
+USRTRACK         -1.    PROTON      -22.        C2       1.0    10000.PFLUX
+USRTRACK        26.0    1.0E-3                                        &
+* Set the random number seed
+RANDOMIZ         1.0
+* Set the number of primary histories to be simulated in the run
+START          1.0E5                            1.
+STOP
