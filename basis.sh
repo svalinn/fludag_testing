@@ -24,8 +24,9 @@ NumDag=$4 #number of dag runs
 NameDag=$5 # name of the dag file
 NameDagh5m=$6 #name of the h5m file
 InputData=$7 # location of the input data
-Test=$8 # type of test
-Tol=$9 # tolerance of the test
+TestType=$8
+Test=$9 # type of test
+Tol=$10 # tolerance of the test
 
 # check for fluka file
 if [ ! -f $InputData/fluka/$NameFluka ] ; then
@@ -62,14 +63,24 @@ name_stub=`echo $NameFluka | sed -e s'/\./ /'g | awk '{print $1}'`
 # run the fluka input
 cd $TestName/fluka
 $FLUPRO/flutil/rfluka -N0 -M$NumFluka $NameFluka > /dev/null
+if [ $TestType == 'usrtrack' ] ; then
 # process the data
-`{
-    for (( i = 1 ; i <= $NumFluka ; i++ )) do
-     echo $name_stub"00"$i"_fort.21"
-    done
-    echo " "
-    echo $name_stub
-  } | $FLUPRO/flutil/ustsuw > /dev/null`
+ `{
+     for (( i = 1 ; i <= $NumFluka ; i++ )) do
+      echo $name_stub"00"$i"_fort.21"
+     done
+     echo " "
+     echo $name_stub
+   } | $FLUPRO/flutil/ustsuw > /dev/null`
+elif [ $TestType == 'usrbdx' ] ; then
+ `{
+     for (( i = 1 ; i <= $NumFluka ; i++ )) do
+      echo $name_stub"00"$i"_fort.21"
+     done
+     echo " "
+     echo $name_stub
+   } | $FLUPRO/flutil/usxsuw > /dev/null`
+fi
 
 # convert to ascii
 `{
@@ -81,13 +92,24 @@ cd ..
 cd fludag
 $FLUPRO/flutil/rfluka -N0 -M$NumDag -e $FLUDAG/bld/mainfludag -d $NameDagh5m $NameDag > /dev/null
 # process the data
-`{
+if [ $TestType == 'usrtrack' ] ; then
+    `{
     for (( i = 1 ; i <= $NumFluka ; i++ )) do
      echo $name_stub"00"$i"_fort.21"
     done
     echo " "
     echo $name_stub
   } | $FLUPRO/flutil/ustsuw > /dev/null`
+elif [ $TestType == 'usrbdx' ] ; then
+    `{
+    for (( i = 1 ; i <= $NumFluka ; i++ )) do
+     echo $name_stub"00"$i"_fort.21"
+    done
+    echo " "
+    echo $name_stub
+  } | $FLUPRO/flutil/usxsuw  > /dev/null`
+fi
+
 # convert to ascii
 `{
     echo $name_stub
