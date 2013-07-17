@@ -3,9 +3,13 @@ Usage
 The testing script framework being composed entirely of bash scripts. To run,
 
       export FLUDAG=<path to DAGMC/FluDAG >
-     ./run_test
+     ./run_test <test_names>
 
-run_tests quite simply runs the tests with the specified criteria contained within test_input. 
+run_tests quite simply runs the tests with the specified criteria contained within test_input. Test names are, 
+
+    * test_input (all tests)
+    * test_fast  (fast tests)
+    * test_slow  (slow tests)
 
 The tests
 ==========
