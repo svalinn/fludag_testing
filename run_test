@@ -1,6 +1,13 @@
 #!/bin/bash
 
+test_input=$1
 # runs the fluka test cases
+
+if [ -z $test_input ] ; then
+    echo "!! ERROR !! "
+    echo "No tests specified"
+    exit
+fi
 
 # check for the flupro environment
 if [ -z $FLUPRO ] ; then
@@ -17,13 +24,13 @@ if [ -z $FLUDAG ] ; then
 fi
 
 # number of tests
-num_test=`wc -l test_input | awk '{print $1}'`
+num_test=`wc -l $test_input | awk '{print $1}'`
 echo "There are "$num_test" tests"
 
 # do n tests
 for (( i = 1 ; i <= $num_test ; i++ )) ; do
 
-    input=`sed -n "$i"p test_input | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'`
+    input=`sed -n "$i"p $test_input | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'`
 
     echo "Running test ..."$i
 
