@@ -1,7 +1,7 @@
-test02 test/test02 5 slabs.inp 5 slabs.inp slabs.h5m input/test2/ total 0.01
-test03 test/test03 5 slabs.inp 5 slabs.inp slabs.h5m input/test3/ total 0.01
-test04 test/test04 5 slabs.inp 5 slabs.inp slabs.h5m input/test4/ spectrum  0.01
-test12 test/test12 5 spheres.inp 5 spheres.inp spheres.h5m input/test12/ total 0.001
-test13 test/test13 5 spheres.inp 5 spheres.inp spheres.h5m input/test13/ total 0.001
-test14 test/test14 5 spheres.inp 5 spheres.inp spheres.h5m input/test14/ spectrum 0.1
-test42 test/test42 5 partest.inp 5 partest.inp partest.h5m input/test/41 spectrum 0.1
+test02 test/test02 5 slabs.inp 5 slabs.inp slabs.h5m input/test2/ usrtrack total 0.01
+test03 test/test03 5 slabs.inp 5 slabs.inp slabs.h5m input/test3/ usrtrack total 0.01
+test04 test/test04 5 slabs.inp 5 slabs.inp slabs.h5m input/test4/ usrtrack spectrum  0.01
+test12 test/test12 5 spheres.inp 5 spheres.inp spheres.h5m input/test12/ usrtrack total 0.001
+test13 test/test13 5 spheres.inp 5 spheres.inp spheres.h5m input/test13/ usrtrack total 0.001
+test14 test/test14 5 spheres.inp 5 spheres.inp spheres.h5m input/test14/ usrtrack spectrum 0.1
+test42 test/test42 5 partest.inp 5 partest.inp partest.h5m input/test41/ usrbdx spectrum 0.1
