@@ -25,7 +25,7 @@ ASSIGNMA      NICKEL        C3                            1.
 ASSIGNMA      NICKEL        C4                            1.
 LOW-NEUT        260.                           0.0                -11.
 MGNFIELD        10.0     0.005      0.01       1.0       0.0       0.0
-USRTRACK         -1.    PROTON      -22.        C3       1.0    1000.0PFLUXCE1
+USRTRACK         -1.    PROTON      -21.        C3       1.0    1000.0PFLUXCE1
 USRTRACK        .011   1.0E-14                                        &
 *USRBIN           10.   NEUTRON      -21.     100.0     100.0     100.0NFLUX
 *USRBIN        -100.0    -100.0    -100.0       9.0    1000.0    1000.0&
