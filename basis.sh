@@ -26,7 +26,7 @@ NameDagh5m=$6 #name of the h5m file
 InputData=$7 # location of the input data
 TestType=$8
 Test=$9 # type of test
-Tol=$10 # tolerance of the test
+Tol=${10} # tolerance of the test
 
 # check for fluka file
 if [ ! -f $InputData/fluka/$NameFluka ] ; then
@@ -83,9 +83,9 @@ elif [ $TestType == 'usrbdx' ] ; then
 fi
 
 # convert to ascii
-`{
-    echo $name_stub
- } | $FLUPRO/flutil/usbrea &> /dev/null` 
+#`{
+#    echo $name_stub
+# } | $FLUPRO/flutil/usbrea &> /dev/null` 
 cd ..
 
 # run the fludag problem
@@ -111,9 +111,9 @@ elif [ $TestType == 'usrbdx' ] ; then
 fi
 
 # convert to ascii
-`{
-    echo $name_stub
- } | $FLUPRO/flutil/usbrea  &> /dev/null`
+#`{
+#    echo $name_stub
+# } | $FLUPRO/flutil/usbrea  &> /dev/null`
 cd ..
  
 # determine pass or fail
@@ -139,15 +139,13 @@ if [ $Test == "total" ] ; then
       for (( j = 1 ; j <= $num_scores_fluka ; j++)) do
          fluka_val=`sed -n "$j"p fluka_res | awk '{print $4}'`
 	 fludag_val=`sed -n "$j"p fludag_res | awk '{print $4}'`
-	 diff=`{
-                echo "$fluka_val-$fludag_val"
-		} | bc`
-         diffsq=`{
-                  echo "sqrt($diff*$diff)"
-		  } | bc -l`
 
-	 if [[ $(echo "if (${diffsq} > ${Tol}) 1 else 0" | bc) -eq 1 ]]; then
+	 diff=`echo $fluka_val $fludag_val | awk '{print $1-$2}' | tr '[:lower:]' '[:upper:]'`
+	 diffsq=`echo $diff | awk '{print sqrt($1*$1)}' | tr '[:lower:]' '[:upper:]'`
+
+	 if [ "$(echo "$diffsq > $Tol" | bc -l)" -eq "1" ];then
 	     echo "Scores differ by more than tolerance"
+	     echo "Tolerance = " $Tol " Difference = " $diffsq
 	     echo "!! Test FAILED !!"
 	     exit
 	 else
@@ -187,17 +185,11 @@ elif [ $Test == "spectrum" ] ; then
 	fluka_val=`sed -n "$i"p fluka/$name_stub"_tab.lis" | awk '{print $3}'`
 	fludag_val=`sed -n "$i"p fludag/$name_stub"_tab.lis" | awk '{print $3}'`
 
-	diff=`{
-              echo "$fluka_val-$fludag_val"
-	      } | bc`
-        diffsq=`{
-                echo "sqrt($diff*$diff)"
-	        } | bc -l`
-
-	 if [[ $(echo "if (${diffsq} > ${Tol}) 1 else 0" | bc) -eq 1 ]]; then
+	 diff=`echo $fluka_val $fludag_val | awk '{print $1-$2}'`
+	 diffsq=`echo $diff | awk '{print sqrt($1*$1)}' | tr '[:lower:]' '[:upper:]'`
+	 if [ "$(echo $diffsq '>' $Tol | bc -l)" -eq "1" ];then
 	     echo "Scores differ by more than tolerance"
-	     echo "Difference = " $diff
-	     echo "Magnitude = " $diffsq
+	     echo "Tolerance = " $Tol " Difference = " $diffsq
 	     echo "!! Test FAILED !!"
 	     exit
 	 else
