@@ -1,0 +1,2 @@
+test51 test/test51 1 test51.inp 1 test51.inp test51.h5m input/test51/ usrtrack total 0.0001
+test52 test/test52 1 test51.inp 1 test51.inp test51.h5m input/test51/ usrtrack spectrum 0.01
