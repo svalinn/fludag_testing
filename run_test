@@ -30,11 +30,11 @@ echo "There are "$num_test" tests"
 # do n tests
 for (( i = 1 ; i <= $num_test ; i++ )) ; do
 
-    input=`sed -n "$i"p $test_input | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'`
+    input=`sed -n "$i"p $test_input` #| awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'`
 
     echo "Running test ..."$i
 
     # run the test
-    ./basis.sh $input
+    ./basis.py $input
 
 done
