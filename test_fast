@@ -1,3 +1,3 @@
-test01 test/test01 1 slabs.inp 1 slabs.inp slabs.h5m input/test1/ usrtrack total 0.01
-test11 test/test11 1 spheres.inp 1 spheres.inp spheres.h5m input/test11/ usrtrack total 0.001
-test41 test/test41 1 partest.inp 1 partest.inp partest.h5m input/test41/ usrbdx total 0.001
+test01 test/test01 1 test01.inp 1 test01.inp test01.h5m input/test1/ usrtrack total 0.01
+test11 test/test11 1 test11.inp 1 test11.inp test11.h5m input/test11/ usrtrack total 0.001
+test41 test/test41 1 test41.inp 1 test41.inp test41.h5m input/test41/ usrbdx total 0.001
