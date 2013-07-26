@@ -192,11 +192,11 @@ os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumFluka)+' '+NameFluka+' > /dev/nu
 
 if "usrtrack" in TestType:
 # its a usrtrack tally
-    write_process_file(TestName,NumFluka)
+    write_process_file(NameFluka,NumFluka)
     os.system('$FLUPRO/flutil/ustsuw < process > /dev/null')
 elif "usrbdx" in TestType:
 
-    write_process_file(TestName,NumFluka)
+    write_process_file(NameFluka,NumFluka)
     os.system('$FLUPRO/flutil/usxsuw < process > /dev/null')
 else:
     print "!! ERROR Unknown test"
@@ -214,11 +214,11 @@ os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumDag)+' -e '+fludag_path+'bld/mai
 # process the fludag output
 if "usrtrack" in TestType:
 # its a usrtrack tally
-    write_process_file(TestName,NumDag)
+    write_process_file(NameDag,NumDag)
     os.system('$FLUPRO/flutil/ustsuw < process > /dev/null')
 elif "usrbdx" in TestType:
 
-    write_process_file(TestName,NumDag)
+    write_process_file(NameDag,NumDag)
     os.system('$FLUPRO/flutil/usxsuw < process > /dev/null')
 else:
     print "!! ERROR Unknown test"
@@ -232,8 +232,8 @@ if 'total' in Test:
         print "Test passed"
     else:
     # checking with tolerance
-        (fluka_data,fluka_error)=get_total_response('fluka/'+TestName+'_sum.lis')
-        (fludag_data,fludag_error)=get_total_response('fludag/'+TestName+'_sum.lis')
+        (fluka_data,fluka_error)=get_total_response('fluka/'+NameFluka+'_sum.lis')
+        (fludag_data,fludag_error)=get_total_response('fludag/'+NameDag+'_sum.lis')
 
         if len(fluka_data) == 0:
             print " !! ERROR !!"
@@ -257,8 +257,8 @@ if 'total' in Test:
     print "Test Passed"
 elif 'spectrum' in Test:
     # ensure the number of energy intervals is correct
-    (num_tal_fluka,num_grp_fluka)=count_e_bins('fluka/'+TestName+'_tab.lis')
-    (num_tal_fludag,num_grp_fludag)=count_e_bins('fludag/'+TestName+'_tab.lis')
+    (num_tal_fluka,num_grp_fluka)=count_e_bins('fluka/'+NameFluka+'_tab.lis')
+    (num_tal_fludag,num_grp_fludag)=count_e_bins('fludag/'+NameDag+'_tab.lis')
     
     if num_tal_fluka != num_tal_fludag:
         print " !! ERROR There not the same number of detectors in each problem !!" 
@@ -279,8 +279,8 @@ elif 'spectrum' in Test:
 
     # everything ok
 
-    (fluka_spec,fluka_error) = get_spec(num_grp_fluka[0],'fluka/'+TestName+'_tab.lis')
-    (fludag_spec,fludag_error) = get_spec(num_grp_fludag[0],'fludag/'+TestName+'_tab.lis')
+    (fluka_spec,fluka_error) = get_spec(num_grp_fluka[0],'fluka/'+NameFluka+'_tab.lis')
+    (fludag_spec,fludag_error) = get_spec(num_grp_fludag[0],'fludag/'+NameDag+'_tab.lis')
 
     for det in range(0,num_tal_fluka):
         for grp in range(0,num_grp_fluka[0]):
