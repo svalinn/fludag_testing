@@ -111,7 +111,7 @@ def get_total_response(fluka_data):
         if not line:
             break
         # if we find tot resp
-        if 'Tot. response' in line:
+        if 'Tot. resp' in line:
             num_scores=num_scores+1
             counter=0
             # get he results
