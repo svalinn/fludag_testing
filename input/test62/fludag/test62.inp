@@ -1,0 +1,48 @@
+TITLE
+
+* Set the defaults for precision simulations
+DEFAULTS                                                              PRECISIO
+* Define the beam characteristics
+BEAM          -0.014                                                  NEUTRON
+* Define the beam position
+BEAMPOS          0.0       0.0       0.0
+GEOBEGIN                                                              COMBNAME
+    0    0          
+SPH S1         0.0 0.0 0.0 15.0
+SPH S2         0.0 0.0 0.0 30.0
+SPH S3         0.0 0.0 0.0 45.0
+SPH S4         0.0 0.0 0.0 60.0
+RPP S5         -100.0 100. -100. 100. -100. 100.
+RPP S6         -105.0 105. -105. 105. -105. 105.
+END
+1           2 +S1
+2           2 -S1 +S2
+3           2 -S2 +S3
+4           2 -S3 +S4
+5           2 -S4 +S5
+6           2 +S6 -S5
+END
+GEOEND
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7..
+ASSIGNMA    MIXTURE1         1
+ASSIGNMA    MIXTURE2         2
+ASSIGNMA    MIXTURE3         3
+ASSIGNMA    MIXTURE4         4
+ASSIGNMA    MIXTURE5         5
+ASSIGNMA    BLCKHOLE         6
+MATERIAL                             1.0       27.                    MIXTURE1
+MATERIAL                             2.0       28.                    MIXTURE2
+MATERIAL                             3.0       29.                    MIXTURE3
+MATERIAL                             4.0       30.                    MIXTURE4
+MATERIAL                             5.0       31.                    MIXTURE5
+COMPOUND         0.5  HYDROGEN       0.5     ARGON                    MIXTURE1
+COMPOUND         0.5    HELIUM       0.5  BERYLLIU                    MIXTURE2
+COMPOUND         0.5    CARBON       0.5  NITROGEN                    MIXTURE3
+COMPOUND         0.5    OXYGEN       0.5  MAGNESIU                    MIXTURE4
+COMPOUND         0.5  ALUMINUM       0.5      IRON                    MIXTURE5
+LOW-NEUT        260.                           0.0                -11.
+* Set the random number seed
+RANDOMIZ         1.0
+* Set the number of primary histories to be simulated in the run
+START            1.0                            1.
+STOP
