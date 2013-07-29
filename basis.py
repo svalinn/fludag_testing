@@ -237,9 +237,6 @@ TestType=str(sys.argv[9])
 Test = str(sys.argv[10])
 Tol = float(sys.argv[11])
 
-print "TestType = ",TestType
-print "Test = ", Test
-
 if not "FLUDAG" in os.environ:
     print "!! ERROR !!"
     print "FLUDAG shell variable not set"
