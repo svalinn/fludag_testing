@@ -1,0 +1,67 @@
+TITLE
+test case
+DEFAULTS                                                              PRECISIO
+START          1.0E6                            1.
+BEAM          -0.014       0.0                10.0       0.0      -1.0NEUTRON
+BEAMPOS        0.001       0.0       0.0
+BEAMAXES         0.0       0.0       1.0       1.0       0.0       0.0
+USRBDX          111.   NEUTRON      -21.        C1        C2       1.0FLUX1
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C2        C3       1.0FLUX2
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C3        C4       1.0FLUX3
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C4        C5       1.0FLUX4
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C5        C6       1.0FLUX5
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C6        C7       1.0FLUX6
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C7        C8       1.0FLUX7
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+USRBDX          111.   NEUTRON      -21.        C8        C9       1.0FLUX8
+USRBDX          0.02   1.0E-14        1.12.5663706       0.0        1. &
+RANDOMIZ
+GEOBEGIN                                                              COMBNAME
+    0    0          test case
+XCC S1         0.0 0.0 10.0
+PLA S2         1.0 0.0 0.0 0.0 0.0 0.0
+PLA S3         1.0 0.1763269807 0.0 10.0 0.0 0.0
+PLA S4         1.0 0.3639702343 0.0 20.0 0.0 0.0
+PLA S5         1.0 0.5773502692 0.0 30.0 0.0 0.0
+PLA S6         1.0 0.8390996312 0.0 40.0 0.0 0.0
+PLA S7         1.0 1.191753593 0.0 50.0 0.0 0.0
+PLA S8         1.0 1.732050808 0.0 60.0 0.0 0.0
+PLA S9         1.0 2.747477419 0.0 80.0 0.0 0.0
+PLA S10        1.0 5.671281829 0.0 120.0 0.0 0.0
+PLA S11        1.0 0.0 0.0 180.0 0.0 0.0
+XCC S100       0.0 0.0 12.0
+YZP S101       -2.0
+YZP S102       182.0
+END
+C1           5 +( +S1 -S2 +S3 )
+C2           5 +( +S1 -S3 +S4 )
+C3           5 +( +S1 -S4 +S5 )
+C4           5 +( +S1 -S5 +S6 )
+C5           5 +( +S1 -S6 +S7 )
+C6           5 +( +S1 -S7 +S8 )
+C7           5 +( +S1 -S8 +S9 )
+C8           5 +( +S1 -S9 +S10 )
+C9           5 +( +S1 -S10 +S11 )
+C10          5 +( -S101 +S2 +S100 )  | +( +S102 -S11 +S100 )  | +( -S2 +S11 -S1 +S100 )
+C11          5 +( -S100 | +S101 | -S102 )
+END
+GEOEND
+ASSIGNMA      VACUUM        C1
+ASSIGNMA      VACUUM        C2
+ASSIGNMA      VACUUM        C3
+ASSIGNMA      VACUUM        C4
+ASSIGNMA      VACUUM        C5
+ASSIGNMA      VACUUM        C6
+ASSIGNMA      VACUUM        C7
+ASSIGNMA      VACUUM        C8
+ASSIGNMA      VACUUM        C9
+ASSIGNMA      VACUUM       C10
+ASSIGNMA    BLCKHOLE       C11
+LOW-NEUT        260.                           0.0                -11.
+STOP
