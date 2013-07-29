@@ -72,6 +72,7 @@ def get_fluka_mat_assign(filename):
         file = open(filename, 'r')
     except:
         print "Could not open the fluka output file"
+        print "Filename = ", filename
         exit()
 
     while 1:
@@ -112,6 +113,7 @@ def get_mat_data(filename):
         file = open(filename, 'r')
     except:
         print "Could not open the fluka input file"
+        print "Filename = ", filename
         exit()
 
     while 1:
@@ -134,6 +136,7 @@ def get_assign_data(filename):
         file = open(filename, 'r')
     except:
         print "Could not open the fluka input file"
+        print "Filename = ", filename
         exit()
 
     while 1:
@@ -157,6 +160,7 @@ def count_e_bins(file_check):
         file = open(file_check, 'r')
     except:
         print "Could not open the results file!"
+        print "Filename = ", file_check
         exit()
 
     while 1:
@@ -187,6 +191,7 @@ def get_total_response(fluka_data):
         file = open(fluka_data, 'r')
     except:
         print "Could not open the results file!"
+        print "Filename = ", fluka_data
         exit()
     
     # while reading
@@ -397,35 +402,27 @@ elif 'spectrum' in Test:
 
 elif 'material' in Test.strip():
     
-    print "mat_test"
-    (flk_reg_num,flk_mat_name)=get_fluka_mat_assign('fluka/test61001.out')
-    (dag_reg_num,dag_mat_name)=get_fluka_mat_assign('fludag/test61001.out')
-
-    # compare number of regions, fludag should always have one more for the implicit compliment
-    if len(flk_reg_num) != len(dag_reg_num)-1:
-        print "Test Failed"
-        print "The number of volumes is different"
-        exit()
-
-    # compre mat assignments
-    for i in range(0,len(flk_reg_num)):
-        if flk_mat_name[i] != dag_mat_name[i]:
+    assignment_fluka=get_assign_data('fluka/'+NameFluka)
+    assignment_fludag=get_assign_data('fludag/mat.inp')
+    for i in range(0,len(assignment_fluka)):
+        if assignment_fludag[i] not in assignment_fluka[i]:
             print "Test Failed"
-            print "The material assigments are different"
-            print "Fluka assigment region = ", flk_reg_num[i], " with assignment ", flk_mat_name[i]
-            print "Fluka assigment region = ", dag_reg_num[i], " with assignment ", dag_mat_name[i]
+            print "Material assignments are not equal"
+            print "Fluka = ", assignment_fluka[i]
+            print "FluDAG = ", assignment_fludag[i]
             exit()
-
+            
     print "Test passed"
-    exit()
+    exit()        
+
 
 elif 'compound' in Test.strip():
     # check that the mat.inp file has the correct bindings
     
-    mats_fluka=get_mat_data('fluka/test62.inp')
-    assignment_fluka=get_assign_data('fluka/test62.inp')
-    
+    mats_fluka=get_mat_data('fluka/'+NameFluka)    
     mats_fludag=get_mat_data('fludag/mat.inp')
+
+    assignment_fluka=get_assign_data('fluka/'+NameFluka)
     assignment_fludag=get_assign_data('fludag/mat.inp')
 
 
