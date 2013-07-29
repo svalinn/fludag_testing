@@ -1,0 +1,26 @@
+TITLE
+
+* Set the defaults for precision simulations
+DEFAULTS                                                              PRECISIO
+* Define the beam characteristics
+BEAM          -0.014                                                  NEUTRON
+* Define the beam position
+BEAMPOS          0.0       0.0       0.0
+GEOBEGIN                                                              FLUGG
+GEOEND
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7..
+ASSIGNMAt   HYDROGEN         1
+ASSIGNMAt     HELIUM         2
+ASSIGNMAt   BERYLLIU         3
+ASSIGNMAt     CARBON         4
+ASSIGNMAt   NITROGEN         5
+ASSIGNMAt   BLCKHOLE         6
+* The next volume is the implicit complement
+ASSIGNMAt     VACUUM         7
+*...+....1....+....2....+....3....+....4....+....5....+....6....+....7...
+LOW-NEUT        260.                           0.0                -11.
+* Set the random number seed
+RANDOMIZ         1.0
+* Set the number of primary histories to be simulated in the run
+START            1.0                            1.
+STOP
