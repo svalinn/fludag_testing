@@ -1,15 +1,14 @@
-test01 test/test01 1 slabs.inp 1 slabs.inp slabs.h5m input/test1/ usrtrack total 0.01
+test01 test/test01 1 test01.inp 1 test01.inp test01.h5m input/test1/ usrtrack total 0.01
 test02 test/test02 5 slabs.inp 5 slabs.inp slabs.h5m input/test2/ usrtrack total 0.01
-test03 test/test03 1 slabs.inp 1 slabs.inp slabs.h5m input/test3/ usrtrack total 0.01
-test04 test/test04 5 slabs.inp 5 slabs.inp slabs.h5m input/test4/ usrtrack spectrum  0.01
-test11 test/test11 1 spheres.inp 1 spheres.inp spheres.h5m input/test11/ usrtrack total 0.001
-test12 test/test12 1 spheres.inp 1 spheres.inp spheres.h5m input/test12/ usrtrack total 0.001
-test13 test/test13 1 spheres.inp 1 spheres.inp spheres.h5m input/test13/ usrtrack total 0.001
-test14 test/test14 1 spheres.inp 1 spheres.inp spheres.h5m input/test14/ usrtrack spectrum 0.1
-test21 test/test21 1 prot.inp 1 prot.inp prot.h5m input/test21/ usrtrack total 0.001
-test41 test/test41 1 partest.inp 1 partest.inp partest.h5m input/test41/ usrbdx total 0.001
-test42 test/test42 5 partest.inp 5 partest.inp partest.h5m input/test41/ usrbdx spectrum 0.1
-test51 test/test51 5 test51.inp 5 test51.inp test51.h5m input/test51/ usrtrack total 0.0001
-test52 test/test52 5 test51.inp 5 test51.inp test51.h5m input/test51/ usrtrack spectrum 0.0001
-
-
+test03 test/test03 5 slabs.inp 5 slabs.inp slabs.h5m input/test3/ usrtrack total 0.01
+test04 test/test04 5 slabs.inp 5 slabs.inp slabs.h5m input/test3/ usrtrack spectrum  0.01
+test11 test/test11 1 test11.inp 1 test11.inp test11.h5m input/test11/ usrtrack total 0.001
+test12 test/test12 5 spheres.inp 5 spheres.inp spheres.h5m input/test12/ usrtrack total 0.001
+test13 test/test13 5 spheres.inp 5 spheres.inp spheres.h5m input/test13/ usrtrack total 0.001
+test14 test/test14 5 spheres.inp 5 spheres.inp spheres.h5m input/test13/ usrtrack spectrum 0.1
+test41 test/test41 1 test41.inp 1 test41.inp test41.h5m input/test41/ usrbdx total 0.001
+test42 test/test42 5 test42.inp 5 test42.inp test42.h5m input/test42/ usrbdx spectrum 0.1
+test51 test/test51 1 test51.inp 1 test51.inp test51.h5m input/test51/ usrtrack total 0.0001
+test52 test/test52 1 test52.inp 1 test52.inp test52.h5m input/test52/ usrtrack spectrum 0.01
+test61 test/test61 1 test61.inp 1 test61.inp test61.h5m input/test61/ code material 0.0001
+test62 test/test62 1 test62.inp 1 test62.inp test62.h5m input/test62/ code compound 0.0001
