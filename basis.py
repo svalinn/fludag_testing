@@ -62,6 +62,90 @@ def get_spec(egrps,filename):
     file.close()
     return flux,error
 
+# function to get material assignments
+def get_fluka_mat_assign(filename):
+
+    reg_num=[]
+    mat_name=[]
+
+    try:
+        file = open(filename, 'r')
+    except:
+        print "Could not open the fluka output file"
+        exit()
+
+    while 1:
+        line = file.readline()
+        if not line:
+            break
+        # look for regions line
+        if '=== Regions:' in line:
+            # read 4 lines
+            for i in range(0,4):
+                line = file.readline()
+            line = file.readline()
+            while len(line.split()) != 0:
+                # if there are 7 tokens then we have a mat line
+                if len(line.split()) == 7:
+                    count=0
+                    for token in line.split():
+                        count=count+1
+                        if count == 2:
+                            reg_num.append(int(token))
+                        elif count == 4:
+                            mat_name.append(token)
+                            line = file.readline()
+                            break
+                elif len(line.split()) == 5:
+                    line = file.readline()                    
+                else:
+                    return reg_num,mat_name
+            
+    return reg_num,mat_name
+
+#function to get the materiual ass
+def get_mat_data(filename):
+    
+    mats=[]
+
+    try:
+        file = open(filename, 'r')
+    except:
+        print "Could not open the fluka input file"
+        exit()
+
+    while 1:
+        line = file.readline()
+        if not line:
+            break
+        if 'MATERIAL' in line:
+            mats.append(line)
+
+    file.close()
+
+    return mats
+
+# get the assign keywrods from file
+def get_assign_data(filename):
+
+    assignment=[]
+
+    try:
+        file = open(filename, 'r')
+    except:
+        print "Could not open the fluka input file"
+        exit()
+
+    while 1:
+        line = file.readline()
+        if not line:
+            break
+        if 'ASSIGNMA' in line:
+            assignment.append(line)
+
+    file.close()
+
+    return assignment
 
 # count the number of energy bins in each detector
 def count_e_bins(file_check):
@@ -153,6 +237,9 @@ TestType=str(sys.argv[9])
 Test = str(sys.argv[10])
 Tol = float(sys.argv[11])
 
+print "TestType = ",TestType
+print "Test = ", Test
+
 if not "FLUDAG" in os.environ:
     print "!! ERROR !!"
     print "FLUDAG shell variable not set"
@@ -188,7 +275,8 @@ shutil.copy(InputData+'/fludag/'+NameDagh5m,TestDir+'/fludag/'+NameDagh5m)
 
 # run the fluka file
 os.chdir(TestDir+'/fluka')
-os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumFluka)+' '+NameFluka+' > /dev/null')
+if "code" not in TestType:
+    os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumFluka)+' '+NameFluka+' > /dev/null')
 
 if "usrtrack" in TestType:
 # its a usrtrack tally
@@ -198,6 +286,8 @@ elif "usrbdx" in TestType:
 
     write_process_file(NameFluka,NumFluka)
     os.system('$FLUPRO/flutil/usxsuw < process > /dev/null')
+elif "code" in TestType:
+    pass
 else:
     print "!! ERROR Unknown test"
     exit()
@@ -209,7 +299,12 @@ os.chdir('..')
 os.chdir('fludag')
 
 # run the fludag problem
-os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumDag)+' -e '+fludag_path+'bld/mainfludag'+' -d '+NameDagh5m+' '+NameDag+' > /dev/null')
+if "code" not in TestType:
+    os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumDag)+' -e '+fludag_path+'bld/mainfludag'+' -d '+NameDagh5m+' '+NameDag+' > /dev/null')
+else:
+    # generate the mat.inp
+    os.system(fludag_path+'bld/mainfludag '+NameDagh5m+' > /dev/null')
+
 
 # process the fludag output
 if "usrtrack" in TestType:
@@ -217,9 +312,10 @@ if "usrtrack" in TestType:
     write_process_file(NameDag,NumDag)
     os.system('$FLUPRO/flutil/ustsuw < process > /dev/null')
 elif "usrbdx" in TestType:
-
     write_process_file(NameDag,NumDag)
     os.system('$FLUPRO/flutil/usxsuw < process > /dev/null')
+elif "code" in TestType:
+    pass
 else:
     print "!! ERROR Unknown test"
     exit()
@@ -301,7 +397,65 @@ elif 'spectrum' in Test:
                     print "Diff = ",  math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp]), " tol = ", Tol
                     exit()
     print "Test passed"                  
+
+elif 'material' in Test.strip():
+    
+    print "mat_test"
+    (flk_reg_num,flk_mat_name)=get_fluka_mat_assign('fluka/test61001.out')
+    (dag_reg_num,dag_mat_name)=get_fluka_mat_assign('fludag/test61001.out')
+
+    # compare number of regions, fludag should always have one more for the implicit compliment
+    if len(flk_reg_num) != len(dag_reg_num)-1:
+        print "Test Failed"
+        print "The number of volumes is different"
+        exit()
+
+    # compre mat assignments
+    for i in range(0,len(flk_reg_num)):
+        if flk_mat_name[i] != dag_mat_name[i]:
+            print "Test Failed"
+            print "The material assigments are different"
+            print "Fluka assigment region = ", flk_reg_num[i], " with assignment ", flk_mat_name[i]
+            print "Fluka assigment region = ", dag_reg_num[i], " with assignment ", dag_mat_name[i]
+            exit()
+
+    print "Test passed"
+    exit()
+
+elif 'compound' in Test.strip():
+    # check that the mat.inp file has the correct bindings
+    
+    mats_fluka=get_mat_data('fluka/test62.inp')
+    assignment_fluka=get_assign_data('fluka/test62.inp')
+    
+    mats_fludag=get_mat_data('fludag/mat.inp')
+    assignment_fludag=get_assign_data('fludag/mat.inp')
+
+
+    for i in range(0,len(mats_fluka)):
+        for token in mats_fludag[i]:
+            if token not in mats_fluka[i]:
+                print "Test Failed" 
+                print "Material tags are not the same"
+                print "Fluka = ", mats_fluka[i]
+                print "Fludag = ", mats_fludag[i]
+                exit()
+
+
+    for i in range(0,len(mats_fluka)):
+        if assignment_fludag[i] not in assignment_fluka[i]:
+            print "Test Failed"
+            print "Material assignments are not equal"
+            print "Fluka = ", assignment_fluka[i]
+            print "FluDAG = ", assignment_fludag[i]
+            exit()
+            
+    print "Test passed"
+    exit()        
+
 else:
+    print "TestType = ",TestType
+    print "Test = ", Test
     print "!! ERROR !!"
     print "Unknown type of test"
     exit()
