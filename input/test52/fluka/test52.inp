@@ -30,7 +30,7 @@ USRTRACK        .011   1.0E-14                                        &
 *USRBIN           10.   NEUTRON      -21.     100.0     100.0     100.0NFLUX
 *USRBIN        -100.0    -100.0    -100.0       9.0    1000.0    1000.0&
 * Set the random number seed
-RANDOMIZ         1.0 54217137.
+RANDOMIZ         1.0
 * Set the number of primary histories to be simulated in the run
 START       100000.0
 STOP
