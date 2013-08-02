@@ -17,16 +17,19 @@ def mkdir_p(path):
 # write the file to process data
 def write_process_file(TestName,NumFluka):
 
+    test_name = TestName
+    name = test_name.split('.')
     file = open("process", 'w')
     # write command file to process data
     for i in range(1,NumFluka+1):
-        string = TestName+'00'+str(i)+'_fort.21\n'
+        
+        string = name[0]+'00'+str(i)+'_fort.21\n'
         file.write(string)
 
     file.write('\r\n')
-    file.write(TestName+'\n')
+    file.write(name[0]+'\n')
     file.close()
-    return
+    return 
 
 # get the spectra from a given detctro file
 def get_spec(egrps,filename):
@@ -325,13 +328,15 @@ else:
 os.chdir('..')
 # perform comparison
 if 'total' in Test:
-    diff = subprocess.Popen(["diff","-c","fluka/test51_sum.lis","fludag/test51_sum.lis"], stdout = subprocess.PIPE, stderr = subprocess.STDOUT).communicate()[0]
+    test_name = TestName
+    name = test_name.split('.')
+    diff = subprocess.Popen(["diff","-c","fluka/"+name[0]+"_sum.lis","fludag/"+name[0]+"_sum.lis"], stdout = subprocess.PIPE, stderr = subprocess.STDOUT).communicate()[0]
     if not diff:
         print "Test passed"
     else:
     # checking with tolerance
-        (fluka_data,fluka_error)=get_total_response('fluka/'+NameFluka+'_sum.lis')
-        (fludag_data,fludag_error)=get_total_response('fludag/'+NameDag+'_sum.lis')
+        (fluka_data,fluka_error)=get_total_response('fluka/'+name[0]+'_sum.lis')
+        (fludag_data,fludag_error)=get_total_response('fludag/'+name[0]+'_sum.lis')
 
         if len(fluka_data) == 0:
             print " !! ERROR !!"
@@ -354,9 +359,14 @@ if 'total' in Test:
 
     print "Test Passed"
 elif 'spectrum' in Test:
+
+    # everything ok
+    test_name = TestName
+    name = test_name.split('.')
+
     # ensure the number of energy intervals is correct
-    (num_tal_fluka,num_grp_fluka)=count_e_bins('fluka/'+NameFluka+'_tab.lis')
-    (num_tal_fludag,num_grp_fludag)=count_e_bins('fludag/'+NameDag+'_tab.lis')
+    (num_tal_fluka,num_grp_fluka)=count_e_bins('fluka/'+name[0]+'_tab.lis')
+    (num_tal_fludag,num_grp_fludag)=count_e_bins('fludag/'+name[0]+'_tab.lis')
     
     if num_tal_fluka != num_tal_fludag:
         print " !! ERROR There not the same number of detectors in each problem !!" 
@@ -375,10 +385,8 @@ elif 'spectrum' in Test:
             print "In the ", egrp+1,"th deterctor of fluka or fludag"
             exit()
 
-    # everything ok
-
-    (fluka_spec,fluka_error) = get_spec(num_grp_fluka[0],'fluka/'+NameFluka+'_tab.lis')
-    (fludag_spec,fludag_error) = get_spec(num_grp_fludag[0],'fludag/'+NameDag+'_tab.lis')
+    (fluka_spec,fluka_error) = get_spec(num_grp_fluka[0],'fluka/'+name[0]+'_tab.lis')
+    (fludag_spec,fludag_error) = get_spec(num_grp_fludag[0],'fludag/'+name[0]+'_tab.lis')
 
     for det in range(0,num_tal_fluka):
         for grp in range(0,num_grp_fluka[0]):
