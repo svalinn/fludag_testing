@@ -253,6 +253,14 @@ if not "FLUDAG" in os.environ:
 # get the fludag path
 fludag_path = os.getenv('FLUDAG')
 
+# check to ensure fludag exists
+if not os.path.isfile(fludag_path+'/mainfludag'):
+    print "!! ERROR !!"
+    print "Could not get fludag executable"
+    print "I looked for it in ", fludag_path+'/mainfludag')
+    exit()
+
+
 # check to make sure fluka file exists
 if not os.path.isfile(InputData+'/fluka/'+NameFluka):
     print "!! ERROR !!"
@@ -305,7 +313,7 @@ os.chdir('fludag')
 
 # run the fludag problem
 if "code" not in TestType:
-    os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumDag)+' -e '+fludag_path+'bld/mainfludag'+' -d '+NameDagh5m+' '+NameDag+' > /dev/null')
+    os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumDag)+' -e '+fludag_path+'/mainfludag'+' -d '+NameDagh5m+' '+NameDag+' > /dev/null')
 else:
     # generate the mat.inp
     os.system(fludag_path+'bld/mainfludag '+NameDagh5m+' > /dev/null')
@@ -358,6 +366,8 @@ if 'total' in Test:
                 continue
 
     print "Test Passed"
+    exit()
+
 elif 'spectrum' in Test:
 
     # everything ok
@@ -407,6 +417,7 @@ elif 'spectrum' in Test:
                     print "Diff = ",  math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp]), " tol = ", Tol
                     exit()
     print "Test passed"                  
+    exit()
 
 elif 'material' in Test.strip():
     
