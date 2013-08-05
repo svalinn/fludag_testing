@@ -4,6 +4,7 @@ import os
 import shutil
 import math
 import subprocess 
+import re
 
 # to make a dir
 def mkdir_p(path):
@@ -243,7 +244,14 @@ NameDagh5m=str(sys.argv[7])
 InputData=str(sys.argv[8])
 TestType=str(sys.argv[9])
 Test = str(sys.argv[10])
-Tol = float(sys.argv[11])
+
+try:
+    float(sys.argv[11])
+except:
+    Tol = sys.argv[11]
+else:
+    Tol = float(sys.argv[11])
+
 
 if not "FLUDAG" in os.environ:
     print "!! ERROR !!"
@@ -257,7 +265,7 @@ fludag_path = os.getenv('FLUDAG')
 if not os.path.isfile(fludag_path+'/mainfludag'):
     print "!! ERROR !!"
     print "Could not get fludag executable"
-    print "I looked for it in ", fludag_path+'/mainfludag')
+    print "I looked for it in "+fludag_path+'/mainfludag'
     exit()
 
 
@@ -342,7 +350,7 @@ if 'total' in Test:
     if not diff:
         print "Test passed"
     else:
-    # checking with tolerance
+        # generate the data to test
         (fluka_data,fluka_error)=get_total_response('fluka/'+name[0]+'_sum.lis')
         (fludag_data,fludag_error)=get_total_response('fludag/'+name[0]+'_sum.lis')
 
@@ -350,23 +358,48 @@ if 'total' in Test:
             print " !! ERROR !!"
             print " we have a problem the numebr of detectors is 0"
             exit()
-
+                
         if len(fluka_data) != len(fludag_data):
             print "!! ERROR The number of scorers in each file do not match !!"
             print "There are ",len(fluka_data), " Fluka scorers"
             print "There are ",len(fludag_data)," Fludag scorers"
             exit()
-            
-        for i in range (0,len(fluka_data)):
-            if ( (math.fabs(fluka_data[i]-fludag_data[i]))/fluka_data[i] > Tol ):
-                print "Scores differ by more than tolerance"
-                print "!! Test failed !!"
-                exit()
-            else:
-                continue
 
-    print "Test Passed"
-    exit()
+        if '.' in str(Tol): # then its a number, check with tolerance
+            for i in range (0,len(fluka_data)):
+                if ( (math.fabs(fluka_data[i]-fludag_data[i]))/fluka_data[i] > Tol ):
+                    print "Scores differ by more than tolerance"
+                    print "!! Test failed !!"
+                    exit()
+                else:
+                    continue
+
+            print "Test Passed"
+            exit()
+        elif 'sig' in str(Tol): # then its a word
+
+            if( NumFluka < 2 ): # make sure enough runs to get error estimate
+                print " !! ERROR !! "
+                print "To use standard deviation as tolerance more than 1 run"
+                print "must be used"
+                exit()
+
+
+            n = int(''.join(x for x in Tol if x.isdigit()))
+            for i in range(0,len(fluka_data)):             
+                std_dev = math.sqrt(fluka_error[i]**2+fludag_error[i]**2)
+                if ( (fludag_data[i]/fluka_data[i] >= 1.+(float(n)*std_dev)) and \
+                   ((fludag_data[i]/fluka_data[i] <= 1.-(float(n)*std_dev)))):
+                    print "Scores differ by more than ", str(n),"times the standard deviation"
+                    print fludag_data[i]/fluka_data[i],' +/- ', (float(n)*std_dev)
+                    print "!! Test failed !!"
+                    exit()
+                else:
+                    continue
+
+            print "Test Passed"
+            exit()           
+
 
 elif 'spectrum' in Test:
 
@@ -400,22 +433,44 @@ elif 'spectrum' in Test:
 
     for det in range(0,num_tal_fluka):
         for grp in range(0,num_grp_fluka[0]):
-            if fluka_spec[det][grp] > 0.0:
-                if (math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])/fluka_spec[det][grp]) > Tol:
-                    print "Test failed "
-                    print "In detector, ",det+1 
-                    print fluka_spec[det][grp],fludag_spec[det][grp]
-                    print "Difference in flux in Egrp ",grp+1," of scorers is greater than tol"
-                    print "Diff = ",(math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])/fluka_spec[det][grp]), " tol = ", Tol
+            if '.' in str(Tol): # then its a number, check with tolerance              
+                if fluka_spec[det][grp] > 0.0:
+                    if (math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])/fluka_spec[det][grp]) \
+                            > Tol:
+                        print "Test failed "
+                        print "In detector, ",det+1 
+                        print fluka_spec[det][grp],fludag_spec[det][grp]
+                        print "Difference in flux in Egrp ",grp+1," of scorers is greater than tol"
+                        print "Diff = ",(math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])/fluka_spec[det][grp]), " tol = ", Tol
+                        exit()
+                else:
+                    if (math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])) > Tol:
+                        print "Test failed "
+                        print "In detector, ",det+1 
+                        print fluka_spec[det][grp],fludag_spec[det][grp]
+                        print "Difference in flux in Egrp ",grp+1," of scorers is greater than tol"
+                        print "Diff = ",  math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp]), " tol = ", Tol
+                        exit()
+            elif 'sig' in str(Tol): # then its a word use error estimate
+                n = int(''.join(x for x in Tol if x.isdigit()))
+                if( NumFluka < 2 ): # make sure enough runs to get error estimate
+                    print " !! ERROR !! "
+                    print "To use standard deviation as tolerance more than 1 run"
+                    print "must be used"
                     exit()
-            else:
-                if (math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])) > Tol:
-                    print "Test failed "
-                    print "In detector, ",det+1 
-                    print fluka_spec[det][grp],fludag_spec[det][grp]
-                    print "Difference in flux in Egrp ",grp+1," of scorers is greater than tol"
-                    print "Diff = ",  math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp]), " tol = ", Tol
-                    exit()
+    
+                if fluka_spec[det][grp] > 0.0:
+                    # if the flux is greater than zero
+                    std_dev = math.sqrt(fluka_error[det][grp]**2 + fludag_error[det][grp]**2)
+                    flk_fld = fluka_spec[det][grp]/fludag_spec[det][grp]
+                    if ( (flk_fld >= 1.+(float(n)*std_dev)) and \
+                             ((flk_fld <= 1.-(float(n)*std_dev)))):
+                        print "Difference greater than ", str(n),"times the standard deviation"
+                        print "!! Test failed !!"
+                        print fluka_spec[det][grp],fludag_spec[det][grp], \
+                            fluka_error[det][grp],fludag_error[det][grp]
+                        exit()        
+
     print "Test passed"                  
     exit()
 
