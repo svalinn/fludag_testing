@@ -16,10 +16,10 @@ def mkdir_p(path):
     return
 
 # write the file to process data
-def write_process_file(TestName,NumFluka):
+def write_process_file(InputName,NameOfTest,NumFluka):
 
-    test_name = TestName
-    name = test_name.split('.')
+    input_name = InputName
+    name = input_name.split('.')
     file = open("process", 'w')
     # write command file to process data
     for i in range(1,NumFluka+1):
@@ -28,7 +28,7 @@ def write_process_file(TestName,NumFluka):
         file.write(string)
 
     file.write('\r\n')
-    file.write(name[0]+'\n')
+    file.write(NameOfTest+'\n')
     file.close()
     return 
 
@@ -216,6 +216,8 @@ def get_total_response(fluka_data):
                             score_data.append(float(token))
                         else:
                             score_error.append(float(token))
+                    else:
+                        score_error.append(float(token))
                 except:
                     continue
             else:
@@ -301,11 +303,11 @@ if "code" not in TestType:
 
 if "usrtrack" in TestType:
 # its a usrtrack tally
-    write_process_file(NameFluka,NumFluka)
+    write_process_file(NameFluka,TestName,NumFluka)
     os.system('$FLUPRO/flutil/ustsuw < process > /dev/null')
 elif "usrbdx" in TestType:
 
-    write_process_file(NameFluka,NumFluka)
+    write_process_file(NameFluka,TestName,NumFluka)
     os.system('$FLUPRO/flutil/usxsuw < process > /dev/null')
 elif "code" in TestType:
     pass
@@ -324,16 +326,16 @@ if "code" not in TestType:
     os.system('$FLUPRO/flutil/rfluka -N0 -M'+str(NumDag)+' -e '+fludag_path+'/mainfludag'+' -d '+NameDagh5m+' '+NameDag+' > /dev/null')
 else:
     # generate the mat.inp
-    os.system(fludag_path+'bld/mainfludag '+NameDagh5m+' > /dev/null')
+    os.system(fludag_path+'mainfludag '+NameDagh5m+' > /dev/null')
 
 
 # process the fludag output
 if "usrtrack" in TestType:
 # its a usrtrack tally
-    write_process_file(NameDag,NumDag)
+    write_process_file(NameDag,TestName,NumDag)
     os.system('$FLUPRO/flutil/ustsuw < process > /dev/null')
 elif "usrbdx" in TestType:
-    write_process_file(NameDag,NumDag)
+    write_process_file(NameDag,TestName,NumDag)
     os.system('$FLUPRO/flutil/usxsuw < process > /dev/null')
 elif "code" in TestType:
     pass
@@ -369,6 +371,7 @@ if 'total' in Test:
             for i in range (0,len(fluka_data)):
                 if ( (math.fabs(fluka_data[i]-fludag_data[i]))/fluka_data[i] > Tol ):
                     print "Scores differ by more than tolerance"
+                    print math.fabs(fluka_data[i]-fludag_data[i])/fluka_data[i], ">", Tol
                     print "!! Test failed !!"
                     exit()
                 else:
@@ -387,8 +390,18 @@ if 'total' in Test:
 
             n = int(''.join(x for x in Tol if x.isdigit()))
             for i in range(0,len(fluka_data)):             
-                std_dev = math.sqrt(fluka_error[i]**2+fludag_error[i]**2)
-                if ( (fludag_data[i]/fluka_data[i] >= 1.+(float(n)*std_dev)) and \
+
+                if fluka_data[i] > 0.0 and fludag_data[i] > 0.0:
+                    # if the flux is greater than zero
+                    std_dev = math.sqrt(fluka_error[i]**2 + fludag_error[i]**2)
+                    flk_fld = fluka_data[i]/fludag_data[i]
+                    var = fluka_error[i]**2+fludag_error[i]**2
+                try:
+                    std_dev = math.sqrt(var)
+                except:
+                    std_dev = 0.0
+
+                if ( (fludag_data[i]/fluka_data[i] >= 1.+(float(n)*std_dev)) or \
                    ((fludag_data[i]/fluka_data[i] <= 1.-(float(n)*std_dev)))):
                     print "Scores differ by more than ", str(n),"times the standard deviation"
                     print fludag_data[i]/fluka_data[i],' +/- ', (float(n)*std_dev)
@@ -434,7 +447,7 @@ elif 'spectrum' in Test:
     for det in range(0,num_tal_fluka):
         for grp in range(0,num_grp_fluka[0]):
             if '.' in str(Tol): # then its a number, check with tolerance              
-                if fluka_spec[det][grp] > 0.0:
+                if fluka_spec[det][grp] > 0.0 and fludag_spec[det][grp] > 0.0 :
                     if (math.fabs(fluka_spec[det][grp]-fludag_spec[det][grp])/fluka_spec[det][grp]) \
                             > Tol:
                         print "Test failed "
@@ -459,7 +472,7 @@ elif 'spectrum' in Test:
                     print "must be used"
                     exit()
     
-                if fluka_spec[det][grp] > 0.0:
+                if fluka_spec[det][grp] > 0.0 and fludag_spec[det][grp] > 0.0:
                     # if the flux is greater than zero
                     std_dev = math.sqrt(fluka_error[det][grp]**2 + fludag_error[det][grp]**2)
                     flk_fld = fluka_spec[det][grp]/fludag_spec[det][grp]
