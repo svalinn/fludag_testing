@@ -9,7 +9,7 @@ test14 test/test14 5 spheres.inp 5 spheres.inp spheres.h5m input/test13/ usrtrac
 test41 test/test41 5 test41.inp 5 test41.inp test41.h5m input/test41/ usrbdx total 0.0001
 test42 test/test42 5 test42.inp 5 test42.inp test42.h5m input/test42/ usrbdx spectrum 3sig
 test51 test/test51 5 test51.inp 5 test51.inp test51.h5m input/test51/ usrtrack total 3sig
-test52 test/test52 1 test52.inp 1 test52.inp test52.h5m input/test52/ usrtrack spectrum 0.01
+test52 test/test52 5 test52.inp 5 test52.inp test52.h5m input/test52/ usrtrack spectrum 3sig
 test53 test/test53 5 test52.inp 5 test52.inp test52.h5m input/test52/ usrtrack spectrum 3sig
 test61 test/test61 1 test61.inp 1 test61.inp test61.h5m input/test61/ code material 0.0001
 test62 test/test62 1 test62.inp 1 test62.inp test62.h5m input/test62/ code compound 0.0001
